@@ -1,0 +1,17 @@
+syntax = "proto3";
+package gateway;
+option go_package = "github.com/WillDomine/bitmesh-gateway/api/pb";
+
+message RouteRequest {
+    uint32 feature_flags = 1;
+    string payload = 2;
+}
+
+message RouteResponse {
+    string target_service = 1;
+    bool allowed = 2;
+}
+
+service GatewayRouter {
+    rpc RouteMessage(RouteRequest) returns (RouteResponse)
+}

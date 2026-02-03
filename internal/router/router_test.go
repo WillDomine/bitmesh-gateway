@@ -1,5 +1,7 @@
 package router
 
+import "testing"
+
 func BenchmarkDecide(b *testing.B) {
 	r := NewRouter()
 	b.ResetTimer()

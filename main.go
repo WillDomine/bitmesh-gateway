@@ -7,9 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/WillDomine/bitmesh-gateway/internal/handler"
-	"github.com/WillDomine/bitmesh-gateway/internal/router"
 	"github.com/WillDomine/bitmesh-gateway/api/pb"
+	"github.com/WillDomine/bitmesh-gateway/internal/handler"
+	"github.com/WillDomine/bitmesh-gateway/internal/proxy"
+	"github.com/WillDomine/bitmesh-gateway/internal/router"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -22,17 +23,20 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	//Initalizes the router in bitset_router.go and applies to grpcHandler 
+	//Initalizes the router in bitset_router.go and applies to grpcHandler
 	coreRouter := router.NewRouter()
+	netForwarder := proxy.NewForwarder()
+
 	grpcHandler := &handler.GRPCHandler{
-		Router: coreRouter,
+		Router:    coreRouter,
+		Forwarder: netForwarder,
 	}
 
 	//The GRPC server setup
 	grpcServer := grpc.NewServer()
 	pb.RegisterGatewayRouterServer(grpcServer, grpcHandler)
 
-	//Debugging 
+	//Debugging
 	reflection.Register(grpcServer)
 
 	//Run server in Goroutine

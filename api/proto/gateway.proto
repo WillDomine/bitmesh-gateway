@@ -13,5 +13,5 @@ message RouteResponse {
 }
 
 service GatewayRouter {
-    rpc RouteMessage(RouteRequest) returns (RouteResponse)
+    rpc RouteMessage(RouteRequest) returns (RouteResponse);
 }

@@ -4,7 +4,6 @@
     "en": "A cloud-native gRPC edge router handling 21,000+ RPS with sub-3ms latency. Engineered to solve the 'Thundering Herd' problem using thread-safe connection pooling and double-checked locking. Features O(1) bitwise routing and zero-allocation hot paths via `sync.Pool`.",
     "ja": "21,000以上のRPSと3ms以下の低レイテンシを実現するクラウドネイティブなgRPCエッジルーターです。「Thundering Herd」問題を解決するために、スレッドセーフな接続プールとDouble-Checked Lockingを実装しました。O(1)のビット演算ルーティングと`sync.Pool`によるゼロアロケーション設計を採用しています。"
   },
-  "image": "bitmesh-gateway.png",
   "tags": [
     "Go",
     "gRPC",

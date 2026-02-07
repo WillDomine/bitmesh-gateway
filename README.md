@@ -61,7 +61,7 @@ graph LR
 ### 1. Local Setup
 Clone the repository and install dependencies:
 ```bash
-git clone [https://github.com/WillDomine/bitmesh-gateway.git](https://github.com/WillDomine/bitmesh-gateway.git)
+git clone https://github.com/WillDomine/bitmesh-gateway.git
 cd bitmesh-gateway
 go mod tidy
 ```
@@ -102,7 +102,9 @@ go run cmd/benchmark/main.go
 │   ├── handler/      # gRPC Interface Layer
 │   ├── proxy/        # Network Forwarder + Connection Pool
 │   └── router/       # Core Logic (Bitwise ops + sync.Pool)
-├── api/proto/        # Protocol Buffer definitions
+├── api/
+│    ├──proto/        # Protocol Buffer definitions
+│    ├──pb/           # Protocol Buffer Compilations 
 ├── config.yaml       # Dynamic Service Registry
 ├── Dockerfile        # Multi-stage build definition
 ├── go.mod            # Go module definition

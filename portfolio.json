@@ -1,9 +1,15 @@
 {
   "title": "BitMesh Gateway",
   "description": {
-    "en": "A high-performance gRPC gateway engineered for microservices. It features O(1) routing via bitwise operations and utilizes `sync.Pool` for zero-allocation memory management, significantly reducing GC latency in high-throughput environments.",
-    "ja": "マイクロサービス向けに設計された高パフォーマンスgRPCゲートウェイです。ビット演算によるO(1)の高速ルーティングに加え、`sync.Pool`を活用したゼロアロケーション（メモリ再利用）アーキテクチャを採用し、高トラフィック環境下でのGCレイテンシを最小限に抑えています。"
+    "en": "A cloud-native gRPC edge router handling 21,000+ RPS with sub-3ms latency. Engineered to solve the 'Thundering Herd' problem using thread-safe connection pooling and double-checked locking. Features O(1) bitwise routing and zero-allocation hot paths via `sync.Pool`.",
+    "ja": "21,000以上のRPSと3ms以下の低レイテンシを実現するクラウドネイティブなgRPCエッジルーターです。「Thundering Herd」問題を解決するために、スレッドセーフな接続プールとDouble-Checked Lockingを実装しました。O(1)のビット演算ルーティングと`sync.Pool`によるゼロアロケーション設計を採用しています。"
   },
   "image": "bitmesh-gateway.png",
-  "tags": ["Go", "gRPC", "Microservices", "Concurrency", "Docker"]
+  "tags": [
+    "Go",
+    "gRPC",
+    "Distributed Systems",
+    "High Performance",
+    "Docker"
+  ]
 }

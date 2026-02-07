@@ -11,8 +11,9 @@ import (
 
 type GRPCHandler struct {
 	pb.UnimplementedGatewayRouterServer
-	Router    *router.Router
-	Forwarder *proxy.Forwarder
+	Router     *router.Router
+	Forwarder  *proxy.Forwarder
+	ServiceMap map[string]string
 }
 
 func (h *GRPCHandler) RouteMessage(ctx context.Context, req *pb.RouteRequest) (*pb.RouteResponse, error) {
@@ -22,17 +23,11 @@ func (h *GRPCHandler) RouteMessage(ctx context.Context, req *pb.RouteRequest) (*
 		return nil, fmt.Errorf("permission denied")
 	}
 
-	//Map the service address to var (Future I will add a config.yaml that handles this)
-	var targetAddr string
-	switch target {
-	case "premium-backend":
-		targetAddr = "localhost:50000"
-	case "standard-backend":
-		targetAddr = "localhost:50001"
-	default:
-		return nil, fmt.Errorf("unknown service: %s", target)
+	//Search the map registry for the service
+	targetAddr, exitsts := h.ServiceMap[target]
+	if !exitsts {
+		return nil, fmt.Errorf("Service not found: %s", target)
 	}
-
 	//Send the traffic to the address thorugh forward func in proxy/forwarder.go
 	return h.Forwarder.Forward(ctx, targetAddr, req)
 }

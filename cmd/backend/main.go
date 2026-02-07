@@ -46,10 +46,10 @@ func main() {
 	wg.Add(2)
 
 	//Premium Server
-	go startServer("premium-backend", ":50000", &wg)
+	go startServer("premium-backend", ":50001", &wg)
 
 	//Standard Server
-	go startServer("standard-backend", ":50001", &wg)
+	go startServer("standard-backend", ":50002", &wg)
 
 	wg.Wait()
 }

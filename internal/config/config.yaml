@@ -1,0 +1,6 @@
+server:
+  port: ":50000"
+
+services:
+  premium-backend: "localhost:50001"
+  standard-backend: "localhost:50002"

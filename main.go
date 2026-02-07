@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net"
 	"os"
@@ -17,17 +18,19 @@ import (
 )
 
 func main() {
-
+	//Allows path to be overridden via CLI flags (mismatch between location for manual run vs docker)
+	configPath := flag.String("config", "config.yaml", "path to config file")
+	flag.Parse()
 	//Loads the configuration file (server port and services to call)
-	cfg, err := config.LoadConfig("./internal/config/config.yaml")
+	cfg, err := config.LoadConfig(*configPath)
 	if err != nil {
-		log.Fatalf("Faile to load config, %v", err)
+		log.Fatalf("Failed to load config, %v", err)
 	}
 
 	//Links the server of type tcp to port
 	lis, err := net.Listen("tcp", cfg.Server.Port)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("Failed to listen: %v", err)
 	}
 
 	//Initalizes the router in bitset_router.go and applies to grpcHandler
@@ -36,8 +39,8 @@ func main() {
 
 	//handles all core components
 	grpcHandler := &handler.GRPCHandler{
-		Router:    coreRouter,
-		Forwarder: netForwarder,
+		Router:     coreRouter,
+		Forwarder:  netForwarder,
 		ServiceMap: cfg.Services,
 	}
 
@@ -52,7 +55,7 @@ func main() {
 	go func() {
 		log.Printf("Bitmesh Gateway starting on %s", cfg.Server.Port)
 		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+			log.Fatalf("Failed to serve: %v", err)
 		}
 	}()
 

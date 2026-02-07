@@ -32,7 +32,7 @@ func (r *Router) Decide(flags uint32) (string, bool) {
 	ctx.Reset()
 	ctx.Flags = flags
 
-	//Object goes back to pool even if panic
+	//Returns context to pool to reduce GC pressure
 	defer r.requestPool.Put(ctx)
 
 	// Bitwise for premium

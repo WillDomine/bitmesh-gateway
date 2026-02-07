@@ -1,5 +1,5 @@
 #Build image use golang offical image
-FROM golang:1.25-alphine AS builder
+FROM golang:alpine3.22 AS builder
 
 #Incase of dependency needs
 RUN apk add --no-cache git
@@ -19,16 +19,27 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o bitmesh-gateway .
 
 FROM alpine:latest
 
+#Non root user (no password)
+RUN adduser -D bitmesh
+
+#Certificates
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /root/
+WORKDIR /home/bitmesh
 
 #Copy the binary
 COPY --from=builder /app/bitmesh-gateway .
 
 #Needed for config
-COPY config.yaml .
+COPY ./internal/config/config.yaml .
 
+#Give new user permission to binary and config
+RUN chown bitmesh:bitmesh bitmesh-gateway config.yaml
+
+#Switch User
+USER bitmesh
+
+#Expose Port (internal port map also 50000)
 EXPOSE 50000
 
 CMD [ "./bitmesh-gateway" ]

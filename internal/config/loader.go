@@ -27,7 +27,7 @@ func LoadConfig(path string) (*Config, error) {
 	//Preallocate to parse YAML
 	var cfg Config
 	if err := yaml.Unmarshal(data, &cfg); err != nil {
-		return nil, fmt.Errorf("Faile dto parse yaml: %w", err)
+		return nil, fmt.Errorf("Failed to parse yaml: %w", err)
 	}
 
 	return &cfg, nil

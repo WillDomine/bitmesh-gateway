@@ -20,12 +20,12 @@ func (h *GRPCHandler) RouteMessage(ctx context.Context, req *pb.RouteRequest) (*
 	// The routing happens here using the bitwise logic
 	target, allowed := h.Router.Decide(req.FeatureFlags)
 	if !allowed {
-		return nil, fmt.Errorf("permission denied")
+		return nil, fmt.Errorf("Permission Denied")
 	}
 
 	//Search the map registry for the service
-	targetAddr, exitsts := h.ServiceMap[target]
-	if !exitsts {
+	targetAddr, exists := h.ServiceMap[target]
+	if !exists {
 		return nil, fmt.Errorf("Service not found: %s", target)
 	}
 	//Send the traffic to the address thorugh forward func in proxy/forwarder.go

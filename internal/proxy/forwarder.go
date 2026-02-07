@@ -13,7 +13,7 @@ import (
 
 //Maintains a connection pool of gRPC connections to reduce latency
 type Forwarder struct {
-	//Mutex to unlock and lock, so people don't add the same connections
+	//Mutex protects the connections map from concurrent access during pool misses.
 	mutex sync.RWMutex
 	//The map that stores the conn using the addr as a key
 	connections map[string]*grpc.ClientConn
@@ -21,7 +21,7 @@ type Forwarder struct {
 
 func NewForwarder() *Forwarder {
 	return &Forwarder{
-		//Allocates space for client map
+		//Initialize the map
 		connections: make(map[string]*grpc.ClientConn),
 	}
 }
@@ -49,7 +49,7 @@ func (f *Forwarder) Forward(ctx context.Context, targetAddr string, req *pb.Rout
 			if err != nil {
 				//No Deadlocks here
 				f.mutex.Unlock()
-				return nil, fmt.Errorf("failed to connect to service: %w", err)
+				return nil, fmt.Errorf("Failed to connect to service: %w", err)
 			}
 			f.connections[targetAddr] = conn
 		}
@@ -62,7 +62,7 @@ func (f *Forwarder) Forward(ctx context.Context, targetAddr string, req *pb.Rout
 	//Request the service with the client
 	resp, err := client.RouteMessage(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("service failed: %w", err)
+		return nil, fmt.Errorf("Service failed: %w", err)
 	}
 	//Returns the response and no errors
 	return resp, nil

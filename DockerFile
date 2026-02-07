@@ -1,0 +1,34 @@
+#Build image use golang offical image
+FROM golang:1.25-alphine AS builder
+
+#Incase of dependency needs
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+#Copy Dependencies (Caches so no redownloading each time)
+COPY go.mod go.sum ./
+#Then download libraries
+RUN go mod download
+
+#Copy Source Code
+COPY . .
+
+#Build binary CGO_ENABLE=0 createss a static binary
+RUN CGO_ENABLED=0 GOOS=linux go build -o bitmesh-gateway .
+
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+#Copy the binary
+COPY --from=builder /app/bitmesh-gateway .
+
+#Needed for config
+COPY config.yaml .
+
+EXPOSE 50000
+
+CMD [ "./bitmesh-gateway" ]

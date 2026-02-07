@@ -18,7 +18,7 @@ func main() {
 	const (
 		RequestsToSend = 10000 //Requests
 		Concurrency    = 50    //Users
-		GatewayAddr    = "localhost:42000"
+		GatewayAddr    = "localhost:50000"
 	)
 
 	log.Printf("Starting Load Test: #%d requests with #%d users", RequestsToSend, Concurrency)

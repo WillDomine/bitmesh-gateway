@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/WillDomine/bitmesh-gateway/api/pb"
+	"github.com/WillDomine/bitmesh-gateway/internal/config"
 	"github.com/WillDomine/bitmesh-gateway/internal/handler"
 	"github.com/WillDomine/bitmesh-gateway/internal/proxy"
 	"github.com/WillDomine/bitmesh-gateway/internal/router"
@@ -16,9 +17,15 @@ import (
 )
 
 func main() {
-	port := ":42000"
 
-	lis, err := net.Listen("tcp", port)
+	//Loads the configuration file (server port and services to call)
+	cfg, err := config.LoadConfig("./internal/config/config.yaml")
+	if err != nil {
+		log.Fatalf("Faile to load config, %v", err)
+	}
+
+	//Links the server of type tcp to port
+	lis, err := net.Listen("tcp", cfg.Server.Port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -27,9 +34,11 @@ func main() {
 	coreRouter := router.NewRouter()
 	netForwarder := proxy.NewForwarder()
 
+	//handles all core components
 	grpcHandler := &handler.GRPCHandler{
 		Router:    coreRouter,
 		Forwarder: netForwarder,
+		ServiceMap: cfg.Services,
 	}
 
 	//The GRPC server setup
@@ -41,7 +50,7 @@ func main() {
 
 	//Run server in Goroutine
 	go func() {
-		log.Printf("Bitmesh Gateway starting on %s", port)
+		log.Printf("Bitmesh Gateway starting on %s", cfg.Server.Port)
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("failed to serve: %v", err)
 		}

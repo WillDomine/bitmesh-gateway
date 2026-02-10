@@ -1,14 +1,15 @@
 {
   "title": "BitMesh Gateway",
   "description": {
-    "en": "A cloud-native gRPC edge router handling 21,000+ RPS with sub-3ms latency. Engineered to solve the 'Thundering Herd' problem using thread-safe connection pooling and double-checked locking. Features O(1) bitwise routing and zero-allocation hot paths via `sync.Pool`.",
-    "ja": "21,000以上のRPSと3ms以下の低レイテンシを実現するクラウドネイティブなgRPCエッジルーターです。「Thundering Herd」問題を解決するために、スレッドセーフな接続プールとDouble-Checked Lockingを実装しました。O(1)のビット演算ルーティングと`sync.Pool`によるゼロアロケーション設計を採用しています。"
+    "en": "A cloud-native gRPC edge router handling 44,000+ RPS with ~1ms latency. Engineered to solve the 'Thundering Herd' problem using thread-safe connection pooling. Optimized on Linux (CachyOS) to leverage kernel-level scheduling for maximum throughput.",
+    "ja": "44,000以上のRPSと約1msのレイテンシを実現するクラウドネイティブなgRPCエッジルーターです。「Thundering Herd」問題を解決するために、スレッドセーフな接続プールを実装しました。Linux (CachyOS) 上でカーネルレベルのスケジューリング最適化を行い、スループットを最大化しています。"
   },
+  "image": "bitmesh-gateway.png",
   "tags": [
     "Go",
     "gRPC",
+    "Linux Kernel Tuning",
     "Distributed Systems",
-    "High Performance",
     "Docker"
   ]
 }

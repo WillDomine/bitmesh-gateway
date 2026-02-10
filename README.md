@@ -7,7 +7,7 @@
 
 **BitMesh Gateway** is a high-performance, cloud-native gRPC edge router designed for microservices. It features **O(1) bitwise routing**, **zero-allocation hot paths**, and **thread-safe connection pooling** to handle massive concurrent loads with minimal latency.
 
-Engineered to solve the "Thundering Herd" problem in distributed systems, achieving **21,000+ RPS** with **sub-3ms latency** on standard hardware.
+Engineered to solve the "Thundering Herd" problem in distributed systems, achieving **44,000+ RPS** with **sub-1.3ms latency** on standard hardware.
 
 ---
 
@@ -25,13 +25,13 @@ Engineered to solve the "Thundering Herd" problem in distributed systems, achiev
 
 Benchmarks were conducted using a custom concurrent load generator (included in `cmd/benchmark`) simulating **50 concurrent users** sending **10,000 requests**.
 
-| Metric | Phase 2 (Standard Request) | Phase 3 (BitMesh Pool) | **Improvement** |
-| :--- | :--- | :--- | :--- |
-| **Throughput** | ~6,369 req/sec | **21,336 req/sec** | **3.3x Faster** |
-| **Avg Latency** | 7.72 ms | **2.31 ms** | **-70% Latency** |
-| **Allocations** | 4 B/op | **0 B/op** | **Zero-Alloc** |
+| Environment / Phase | Throughput | Avg Latency | Allocations | Optimization Factor |
+| :--- | :--- | :--- | :--- | :--- |
+| **Phase 2 (Standard Request)** | ~6,369 req/sec | 7.72 ms | 4 B/op | *Baseline (New Client per Request)* |
+| **Phase 3 (Windows 11)** | **21,336 req/sec** | 2.31 ms | **0 B/op** | **3.3x Faster** (Connection Pooling) |
+| **Phase 3 (Linux/CachyOS)** | **44,160 req/sec** | **1.12 ms** | **0 B/op** | **7.0x Faster** (Kernel Scheduling) |
 
-> *Benchmarks run on Intel i9-14900K. "Standard Request" represents creating a new gRPC client per request. "BitMesh Pool" utilizes the internal long-lived connection pool.*
+> *Benchmarks run on Intel i9-14900K. "Standard Request" represents creating a new gRPC client per request. "BitMesh Pool" utilizes the internal long-lived connection pool. The jump to 44k RPS on Linux demonstrates the impact of the BORE CPU scheduler and reduced syscall overhead compared to Windows.*
 
 ---
 
